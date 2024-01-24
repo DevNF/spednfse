@@ -1,0 +1,21 @@
+{
+    "name": "nfhub/spednfse",
+    "description": "Biblioteca para comunicaçao com a API de SpedNFSe do NFHub",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Gisele Mendes",
+            "email": "gi-mendes.ap@hotmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "NFHub\\SpedNfse\\": "src/"
+        }
+    },
+    "minimum-stability": "stable",
+    "require": {
+    	"nfhub/common": "dev-stable"
+    }
+}
