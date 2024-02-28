@@ -291,4 +291,34 @@ class Tools extends ToolsBase
             throw new Exception($e, 1);
         }
     }
+
+    /**
+     * Realiza o envio do pdf e xml por e-mail
+     */
+    function sendMail(string $company_cnpj, int $id, array $emails, array $params = []): array
+    {
+        try {
+            $headers = [
+                "company-cnpj: $company_cnpj"
+            ];
+
+            $response = $this->post("/invoice-services/$id/email", $emails, $params, $headers);
+
+            if ($response['httpCode'] >= 200 || $response['httpCode'] <= 299) {
+                return $response;
+            }
+
+            if (isset($response['body']->message)) {
+                throw new Exception($response['body']->message, 1);
+            }
+
+            if (isset($response['body']->errors)) {
+                throw new Exception(implode("\r\n", $response['body']->errors), 1);
+            }
+
+            throw new Exception(json_encode($response), 1);
+        } catch (Exception $e) {
+            throw new Exception($e, 1);
+        }
+    }
 }
