@@ -18,6 +18,69 @@ use NFHub\Common\Tools as ToolsBase;
 class Tools extends ToolsBase
 {
     /**
+     * Cadastra a logo para sair na impressão da NFSe gerada pelo PlugNotas
+     */
+    function cadastraLogo(string $company_cnpj, array $data, array $params = []): array
+    {
+        try {
+            $this->setUpload(true);
+            $headers = [
+                "company-cnpj: $company_cnpj"
+            ];
+
+            $response = $this->post('logos', $data, $params, $headers);
+
+            if ($response['httpCode'] >= 200 || $response['httpCode'] <= 299) {
+                return $response;
+            }
+
+            if (isset($response['body']->message)) {
+                throw new Exception($response['body']->message, 1);
+            }
+
+            if (isset($response['body']->errors)) {
+                throw new Exception(implode("\r\n", $response['body']->errors), 1);
+            }
+
+            throw new Exception(json_encode($response), 1);
+        } catch (Exception $e) {
+            throw new Exception($e, 1);
+        } finally {
+            $this->setUpload(false);
+        }
+    }
+
+    /**
+     * Remove a logo que sai na impressão da NFSe gerada pelo PlugNotas
+     */
+    function removeLogo(string $company_cnpj, array $params = []): array
+    {
+        try {
+            $headers = [
+                "company-cnpj: $company_cnpj"
+            ];
+
+            $response = $this->delete("logos", $params, $headers);
+
+            if ($response['httpCode'] >= 200 || $response['httpCode'] <= 299) {
+                return $response;
+            }
+
+            if (isset($response['body']->message)) {
+                throw new Exception($response['body']->message, 1);
+            }
+
+            if (isset($response['body']->errors)) {
+                throw new Exception(implode("\r\n", $response['body']->errors), 1);
+            }
+
+            throw new Exception(json_encode($response), 1);
+        } catch (Exception $e) {
+            throw new Exception($e, 1);
+        }
+    }
+    
+    /**
      * Calcula os totais de uma NFSe
      */
     function calculaNfse(string $company_cnpj, array $data, array $params = []): array
